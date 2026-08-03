@@ -311,12 +311,26 @@
   .cta-box h2 { font-size: clamp(1.5rem, 3.4vw, 2.2rem); margin-bottom: 16px; }
   .cta-box p { color: var(--muted); max-width: 540px; margin: 0 auto 34px; font-size: 1.02rem; }
 
-  footer { border-top: 1px solid var(--line); padding: 36px 0; }
-  .footer-inner {
+  footer { border-top: 1px solid var(--line); padding: 54px 0 32px; }
+  .footer-grid {
     max-width: 1140px; margin: 0 auto; padding: 0 24px;
-    display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;
+    display: grid; grid-template-columns: 1.5fr 1fr 1fr; gap: 40px;
   }
-  footer p { color: var(--muted); font-size: 0.86rem; }
+  .footer-brand p { color: var(--muted); font-size: 0.88rem; margin-top: 14px; max-width: 300px; }
+  .footer-col h4 {
+    font-family: 'Orbitron', sans-serif; font-size: 0.72rem; font-weight: 600;
+    letter-spacing: 0.18em; color: var(--cyan); text-transform: uppercase; margin-bottom: 16px;
+  }
+  .footer-col p, .footer-col a { color: var(--muted); font-size: 0.88rem; display: block; margin-bottom: 9px; }
+  .footer-col a:hover { color: var(--cyan); }
+  .footer-bottom {
+    max-width: 1140px; margin: 40px auto 0; padding: 22px 24px 0;
+    border-top: 1px solid var(--line); color: var(--muted); font-size: 0.82rem;
+  }
+  @media (max-width: 800px) {
+    .footer-grid { grid-template-columns: 1fr; gap: 32px; }
+    .footer-brand p { max-width: none; }
+  }
 
   /* reveal */
   .reveal { opacity: 0; transform: translateY(26px); transition: opacity .7s ease, transform .7s ease; }
@@ -570,16 +584,30 @@
     <div class="cta-box reveal">
       <h2>Stop losing customers you never knew you had.</h2>
       <p>Book a free 15-minute discovery call. We'll show you exactly where calls and reviews are slipping through the cracks — no pressure, no jargon.</p>
-      <a href="mailto:eastonbrown919@gmail.com?subject=Discovery%20Call%20—%20Voo%20AI%20Integrations" class="btn btn-primary">Email Us to Get Started</a>
+      <a href="mailto:easton@voointegrations.com?subject=Discovery%20Call%20—%20Voo%20AI%20Integrations" class="btn btn-primary">Email Us to Get Started</a>
     </div>
   </div>
 </section>
 
 <footer>
-  <div class="footer-inner">
-    <a href="#" class="logo" style="font-size:0.85rem;"><span class="logo-mark" style="width:26px;height:26px;"></span>VOO<span class="accent">&nbsp;AI</span>&nbsp;INTEGRATIONS</a>
-    <p>© 2026 Voo AI Integrations · AI systems for local businesses</p>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <a href="#" class="logo" style="font-size:0.85rem;"><span class="logo-mark" style="width:26px;height:26px;"></span>VOO<span class="accent">&nbsp;AI</span>&nbsp;INTEGRATIONS</a>
+      <p>AI training and done-for-you automation systems for small businesses.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <a href="mailto:easton@voointegrations.com">easton@voointegrations.com</a>
+      <a href="tel:+14352925086">+1 (435) 292-5086</a>
+      <p>2069 E 540 S<br>Heber City, UT 84032</p>
+    </div>
+    <div class="footer-col">
+      <h4>Legal</h4>
+      <a href="privacy.html">Privacy Policy</a>
+      <a href="terms.html">Terms of Service</a>
+    </div>
   </div>
+  <div class="footer-bottom">© 2026 Voo AI Integrations · All rights reserved.</div>
 </footer>
 
 <script>

@@ -343,45 +343,44 @@
   .cta-box h2 { font-size: clamp(1.5rem, 3.4vw, 2.2rem); margin-bottom: 16px; }
   .cta-box p { color: var(--muted); font-size: 1.02rem; margin-bottom: 26px; }
 
-  /* contact form */
-  .contact-grid { display: grid; grid-template-columns: 0.85fr 1.15fr; gap: 52px; align-items: start; }
-  .contact-direct { display: flex; flex-direction: column; gap: 12px; margin-top: 30px; }
+  /* contact / chat */
+  .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 52px; align-items: center; }
+  .contact-actions { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 30px; }
+  .contact-direct { display: flex; flex-direction: column; gap: 12px; }
   .contact-direct a, .contact-direct span { color: var(--muted); font-size: 0.92rem; }
   .contact-direct a:hover { color: var(--cyan); }
 
-  .contact-form .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-  .contact-form .field { margin-bottom: 16px; }
-  .contact-form label {
-    display: block; font-size: 0.8rem; font-weight: 600; color: var(--text);
-    margin-bottom: 7px; letter-spacing: 0.02em;
+  .chat-prompt {
+    background: rgba(3, 10, 20, 0.55); border: 1px solid var(--line);
+    border-radius: 14px; padding: 26px 24px;
   }
-  .contact-form .req { color: var(--cyan); }
-  .contact-form input, .contact-form select, .contact-form textarea {
-    width: 100%; padding: 12px 14px; border-radius: 8px;
-    background: rgba(3, 10, 20, 0.6); border: 1px solid var(--line);
-    color: var(--text); font-family: 'Inter', sans-serif; font-size: 0.94rem;
-    transition: border-color .18s, box-shadow .18s;
+  .chat-prompt-head {
+    display: flex; align-items: center; gap: 10px; margin-bottom: 6px;
+    font-family: 'Orbitron', sans-serif; font-size: 0.78rem; font-weight: 600;
+    letter-spacing: 0.14em; text-transform: uppercase; color: var(--cyan);
   }
-  .contact-form input::placeholder, .contact-form textarea::placeholder { color: rgba(143,168,194,0.5); }
-  .contact-form input:focus, .contact-form select:focus, .contact-form textarea:focus {
-    outline: none; border-color: var(--line-bright); box-shadow: 0 0 0 3px rgba(0,229,255,0.08);
+  .chat-dot {
+    width: 8px; height: 8px; border-radius: 50%; background: #4ade80;
+    box-shadow: 0 0 9px rgba(74,222,128,0.9); animation: corePulse 1.8s infinite;
   }
-  .contact-form input.invalid, .contact-form textarea.invalid { border-color: #ff6b81; }
-  .contact-form select { cursor: pointer; }
-  .contact-form select option { background: #071322; color: var(--text); }
-  .contact-form textarea { resize: vertical; min-height: 96px; }
-  .form-submit { width: 100%; margin-top: 6px; }
-  .form-submit:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
-  .form-status { font-size: 0.9rem; margin: 14px 0 0 !important; min-height: 1.2em; }
-  .form-status.ok { color: #5ee6a8; }
-  .form-status.err { color: #ff8fa0; }
+  .chat-prompt-sub { color: var(--muted); font-size: 0.88rem; margin-bottom: 18px !important; }
+  .chat-starters { display: flex; flex-direction: column; gap: 10px; }
+  .starter {
+    text-align: left; width: 100%; cursor: pointer;
+    background: rgba(0,229,255,0.05); border: 1px solid var(--line);
+    color: var(--text); font-family: 'Inter', sans-serif; font-size: 0.9rem;
+    padding: 13px 16px; border-radius: 9px; line-height: 1.45;
+    transition: border-color .18s, background .18s, transform .18s;
+  }
+  .starter:hover {
+    border-color: var(--line-bright); background: rgba(0,229,255,0.1);
+    transform: translateX(3px);
+  }
+  .starter::after { content: " →"; color: var(--cyan); }
 
   @media (max-width: 880px) {
-    .contact-grid { grid-template-columns: 1fr; gap: 36px; }
+    .contact-grid { grid-template-columns: 1fr; gap: 34px; }
     .cta-box { padding: 40px 26px; }
-  }
-  @media (max-width: 560px) {
-    .contact-form .field-row { grid-template-columns: 1fr; gap: 0; }
   }
 
   footer { border-top: 1px solid var(--line); padding: 54px 0 32px; }
@@ -454,7 +453,7 @@
       <a href="#how">How It Works</a>
       <a href="#pricing">Pricing</a>
       <a href="#faq">FAQ</a>
-      <a href="#contact" class="btn btn-primary nav-cta">Get Started</a>
+      <a href="#contact" class="btn btn-primary nav-cta js-open-chat">Get Started</a>
     </div>
   </div>
 </nav>
@@ -602,7 +601,7 @@
           <li>Written report showing your biggest time/money opportunities</li>
           <li>No obligation — fee credits toward any service if you sign up within 30 days</li>
         </ul>
-        <a href="#contact" class="btn btn-ghost">Book Your Audit</a>
+        <a href="#contact" class="btn btn-ghost js-open-chat">Book Your Audit</a>
       </div>
       <div class="panel price-card featured reveal">
         <div class="badge">MOST POPULAR</div>
@@ -616,7 +615,7 @@
           <li>Missed-call and speed-to-lead follow-up included</li>
           <li>Monthly growth report</li>
         </ul>
-        <a href="#contact" class="btn btn-primary">Start Getting Reviews</a>
+        <a href="#contact" class="btn btn-primary js-open-chat">Start Getting Reviews</a>
       </div>
       <div class="panel price-card reveal">
         <span class="corner tl"></span><span class="corner br"></span>
@@ -629,7 +628,7 @@
           <li>Ready-to-use AI playbook for your team</li>
           <li>30 days of follow-up support included</li>
         </ul>
-        <a href="#contact" class="btn btn-ghost">Book a Workshop</a>
+        <a href="#contact" class="btn btn-ghost js-open-chat">Book a Workshop</a>
       </div>
       <div class="panel price-card reveal">
         <span class="corner tl"></span><span class="corner br"></span>
@@ -642,7 +641,7 @@
           <li>Mobile-friendly, fast-loading</li>
           <li>Ongoing hosting, updates, and small edits included</li>
         </ul>
-        <a href="#contact" class="btn btn-ghost">Get a Quote</a>
+        <a href="#contact" class="btn btn-ghost js-open-chat">Get a Quote</a>
       </div>
     </div>
   </div>
@@ -684,8 +683,12 @@
     <div class="cta-box reveal">
       <div class="contact-grid">
         <div class="contact-intro">
-          <h2>Let's find your easy wins.</h2>
-          <p>Tell us a bit about your business and we'll get back to you within one business day — usually much sooner. No pressure, no jargon, no obligation.</p>
+          <h2>Get your questions answered right now.</h2>
+          <p>Start a chat and get straight answers about pricing, what each service does, and what would help your business most — then book your audit without waiting on email tag.</p>
+          <div class="contact-actions">
+            <button type="button" class="btn btn-primary js-open-chat">Chat With Us Now</button>
+            <a href="mailto:easton@voointegrations.com?subject=Question%20—%20Voo%20AI%20Integrations" class="btn btn-ghost">Prefer email?</a>
+          </div>
           <div class="contact-direct">
             <a href="mailto:easton@voointegrations.com">✉&nbsp;&nbsp;easton@voointegrations.com</a>
             <a href="tel:+14352925086">✆&nbsp;&nbsp;+1 (435) 292-5086</a>
@@ -693,41 +696,19 @@
           </div>
         </div>
 
-        <form class="contact-form" id="contactForm" novalidate>
-          <div class="field-row">
-            <div class="field">
-              <label for="cf-name">Your name <span class="req">*</span></label>
-              <input type="text" id="cf-name" name="name" required autocomplete="name" placeholder="Jane Smith">
-            </div>
-            <div class="field">
-              <label for="cf-business">Business name</label>
-              <input type="text" id="cf-business" name="business" autocomplete="organization" placeholder="Smith Plumbing">
-            </div>
+        <div class="chat-prompt">
+          <div class="chat-prompt-head">
+            <span class="chat-dot"></span>
+            <span>Ask us anything</span>
           </div>
-          <div class="field-row">
-            <div class="field">
-              <label for="cf-email">Email <span class="req">*</span></label>
-              <input type="email" id="cf-email" name="email" required autocomplete="email" placeholder="jane@smithplumbing.com">
-            </div>
-            <div class="field">
-              <label for="cf-service">What are you interested in?</label>
-              <select id="cf-service" name="service">
-                <option value="Not sure yet — help me figure it out">Not sure yet — help me figure it out</option>
-                <option value="AI Audit">AI Audit</option>
-                <option value="AI Review Engine">AI Review Engine</option>
-                <option value="AI Training Workshop">AI Training Workshop</option>
-                <option value="Website Build">Website Build</option>
-                <option value="AI Receptionist (when available)">AI Receptionist (when available)</option>
-              </select>
-            </div>
+          <p class="chat-prompt-sub">Tap a question to start the conversation:</p>
+          <div class="chat-starters">
+            <button type="button" class="starter js-open-chat">What would the AI Audit find in my business?</button>
+            <button type="button" class="starter js-open-chat">How does the review system actually work?</button>
+            <button type="button" class="starter js-open-chat">What would this cost for a business my size?</button>
+            <button type="button" class="starter js-open-chat">Can you help me book a time to talk?</button>
           </div>
-          <div class="field">
-            <label for="cf-message">Anything you'd like us to know?</label>
-            <textarea id="cf-message" name="message" rows="4" placeholder="Tell us what's eating up your time right now…"></textarea>
-          </div>
-          <button type="submit" class="btn btn-primary form-submit" id="cf-submit">Send My Request</button>
-          <p class="form-status" id="cf-status" role="status" aria-live="polite"></p>
-        </form>
+        </div>
       </div>
     </div>
   </div>
@@ -831,76 +812,43 @@
     a.addEventListener('click', () => document.getElementById('navLinks').classList.remove('open')));
 
   /* ---------------------------------------------------------------
-     CONTACT FORM
-     To send submissions to an inbox/CRM, set FORM_ENDPOINT below to
-     your Formspree URL (https://formspree.io/f/xxxxxxx) or any other
-     endpoint that accepts a JSON POST.
-     While it is empty, the form falls back to opening a pre-filled
-     email so no enquiry is ever lost.
+     CHAT WIDGET TRIGGERS
+     Any element with class .js-open-chat opens the GoHighLevel chat.
+     If the widget hasn't loaded (blocked, offline, slow network), we
+     fall back to the contact section / email so no lead is lost.
   ----------------------------------------------------------------*/
-  const FORM_ENDPOINT = '';
   const CONTACT_EMAIL = 'easton@voointegrations.com';
 
-  const form = document.getElementById('contactForm');
-  const statusEl = document.getElementById('cf-status');
-  const submitBtn = document.getElementById('cf-submit');
-
-  function setStatus(msg, kind) {
-    statusEl.textContent = msg;
-    statusEl.className = 'form-status' + (kind ? ' ' + kind : '');
+  function chatReady() {
+    return !!(window.leadConnector && window.leadConnector.chatWidget
+              && typeof window.leadConnector.chatWidget.openWidget === 'function');
   }
 
-  function validate() {
-    let ok = true;
-    [['cf-name', v => v.trim().length > 0],
-     ['cf-email', v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim())]].forEach(([id, test]) => {
-      const el = document.getElementById(id);
-      const good = test(el.value);
-      el.classList.toggle('invalid', !good);
-      if (!good && ok) { el.focus(); ok = false; }
-    });
-    return ok;
+  function openChat() {
+    if (!chatReady()) return false;
+    try { window.leadConnector.chatWidget.openWidget(); return true; }
+    catch (e) { return false; }
   }
 
-  form.addEventListener('submit', async e => {
-    e.preventDefault();
-    if (!validate()) { setStatus('Please add your name and a valid email address.', 'err'); return; }
+  document.addEventListener('click', e => {
+    const trigger = e.target.closest('.js-open-chat');
+    if (!trigger) return;
 
-    const data = {
-      name: form.name.value.trim(),
-      business: form.business.value.trim(),
-      email: form.email.value.trim(),
-      service: form.service.value,
-      message: form.message.value.trim()
-    };
-
-    if (!FORM_ENDPOINT) {
-      const body = `Name: ${data.name}\nBusiness: ${data.business}\nEmail: ${data.email}\nInterested in: ${data.service}\n\n${data.message}`;
-      window.location.href = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent('Website enquiry — ' + (data.business || data.name))}&body=${encodeURIComponent(body)}`;
-      setStatus('Opening your email app to send this — just hit send.', 'ok');
+    if (openChat()) {
+      e.preventDefault();
       return;
     }
-
-    submitBtn.disabled = true;
-    setStatus('Sending…');
-    try {
-      const res = await fetch(FORM_ENDPOINT, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-        body: JSON.stringify(data)
-      });
-      if (!res.ok) throw new Error('Request failed');
-      form.reset();
-      setStatus('Thanks! We got it and will be in touch within one business day.', 'ok');
-    } catch (err) {
-      setStatus(`Something went wrong. Please email us directly at ${CONTACT_EMAIL}.`, 'err');
-    } finally {
-      submitBtn.disabled = false;
+    // Fallback: anchors follow their href (#contact); buttons go to email.
+    if (trigger.tagName !== 'A') {
+      e.preventDefault();
+      window.location.href = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent('Question — Voo AI Integrations')}`;
     }
   });
 
-  form.querySelectorAll('input, textarea').forEach(el =>
-    el.addEventListener('input', () => el.classList.remove('invalid')));
+  // Widget announces itself when ready; nothing to do but confirm availability.
+  window.addEventListener('LC_chatWidgetLoaded', () => {
+    document.body.classList.add('chat-ready');
+  });
 </script>
 
 <!-- GoHighLevel chat widget -->

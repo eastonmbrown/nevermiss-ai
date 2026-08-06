@@ -245,6 +245,13 @@
   .service-card ul { list-style: none; }
   .service-card li { color: var(--muted); font-size: 0.9rem; padding: 5px 0 5px 24px; position: relative; }
   .service-card li::before { content: "▸"; position: absolute; left: 4px; color: var(--cyan); }
+  .soon-tag {
+    display: inline-block; margin-left: 9px; vertical-align: middle;
+    font-family: 'Orbitron', sans-serif; font-size: 0.54rem; font-weight: 700;
+    letter-spacing: 0.14em; padding: 4px 9px; border-radius: 3px;
+    color: var(--muted); background: rgba(143,168,194,0.1);
+    border: 1px solid rgba(143,168,194,0.3);
+  }
 
   /* how */
   .how { background: linear-gradient(180deg, transparent, rgba(0,229,255,0.03), transparent); }
@@ -258,8 +265,33 @@
   .step p { color: var(--muted); font-size: 0.93rem; }
 
   /* pricing */
-  .pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; align-items: stretch; }
-  .price-card { padding: 38px 30px; display: flex; flex-direction: column; }
+  .pricing-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; align-items: stretch; }
+  .price-card { padding: 32px 24px; display: flex; flex-direction: column; }
+
+  /* coming soon teaser */
+  .coming-soon {
+    display: flex; align-items: center; gap: 22px; padding: 26px 30px; margin-bottom: 22px;
+    background: rgba(10, 22, 40, 0.32); border-style: dashed; border-color: rgba(143,168,194,0.28);
+    opacity: 0.78; transition: opacity .25s;
+  }
+  .coming-soon:hover { opacity: 1; transform: none; box-shadow: none; border-color: rgba(143,168,194,0.4); }
+  .cs-icon {
+    width: 50px; height: 50px; border-radius: 10px; display: grid; place-items: center;
+    font-size: 22px; flex-shrink: 0; filter: grayscale(0.65);
+    background: rgba(143,168,194,0.07); border: 1px solid rgba(143,168,194,0.22);
+  }
+  .cs-body { flex: 1; min-width: 0; }
+  .cs-body h3 {
+    font-family: 'Orbitron', sans-serif; font-size: 0.95rem; font-weight: 600;
+    letter-spacing: 0.06em; color: var(--muted); margin-bottom: 5px;
+  }
+  .cs-body p { color: var(--muted); font-size: 0.9rem; opacity: 0.85; }
+  .cs-badge {
+    font-family: 'Orbitron', sans-serif; font-size: 0.62rem; font-weight: 700;
+    letter-spacing: 0.16em; padding: 7px 15px; border-radius: 4px; white-space: nowrap;
+    color: var(--muted); background: rgba(143,168,194,0.1);
+    border: 1px solid rgba(143,168,194,0.3); flex-shrink: 0;
+  }
   .price-card.featured {
     border-color: var(--line-bright);
     background: linear-gradient(180deg, rgba(0,229,255,0.09), rgba(10,22,40,0.55));
@@ -274,11 +306,11 @@
   }
   .plan-name { font-family: 'Orbitron', sans-serif; font-weight: 600; font-size: 0.95rem; letter-spacing: 0.06em; margin-bottom: 6px; }
   .plan-for { color: var(--muted); font-size: 0.86rem; margin-bottom: 22px; }
-  .price { font-family: 'Orbitron', sans-serif; font-size: 2.5rem; font-weight: 700; color: var(--text); text-shadow: 0 0 26px rgba(0,229,255,0.25); }
-  .price small { font-size: 0.95rem; color: var(--muted); font-weight: 500; font-family: 'Inter', sans-serif; }
-  .price-note { color: var(--muted); font-size: 0.84rem; margin: 6px 0 24px; }
-  .price-card ul { list-style: none; margin-bottom: 30px; flex: 1; }
-  .price-card li { color: var(--muted); font-size: 0.92rem; padding: 6px 0 6px 24px; position: relative; }
+  .price { font-family: 'Orbitron', sans-serif; font-size: 1.95rem; font-weight: 700; color: var(--text); text-shadow: 0 0 26px rgba(0,229,255,0.25); }
+  .price small { font-size: 0.9rem; color: var(--muted); font-weight: 500; font-family: 'Inter', sans-serif; }
+  .price-note { color: var(--muted); font-size: 0.8rem; margin: 6px 0 22px; }
+  .price-card ul { list-style: none; margin-bottom: 26px; flex: 1; }
+  .price-card li { color: var(--muted); font-size: 0.88rem; padding: 6px 0 6px 22px; position: relative; }
   .price-card li::before { content: "▸"; position: absolute; left: 4px; color: var(--cyan); }
   .price-card .btn { text-align: center; }
 
@@ -345,7 +377,7 @@
     .sec-tag::after { content: ""; width: 34px; height: 1px; background: var(--line-bright); }
     .sec-head { text-align: center; }
     .sec-sub { margin: 0 auto; }
-    .services-grid, .steps, .pricing-grid, .problem-grid { grid-template-columns: 1fr; }
+    .services-grid, .steps, .problem-grid { grid-template-columns: 1fr; }
     .nav-links { display: none; }
     .nav-links.open {
       display: flex; flex-direction: column; position: absolute; top: 100%; left: 0; right: 0;
@@ -355,6 +387,15 @@
     .menu-toggle { display: block; }
     section { padding: 70px 0; }
     .chip-2 { left: 0; } .chip-3 { right: 0; }
+  }
+
+  @media (max-width: 1120px) {
+    .pricing-grid { grid-template-columns: repeat(2, 1fr); gap: 20px; }
+  }
+  @media (max-width: 640px) {
+    .pricing-grid { grid-template-columns: 1fr; }
+    .coming-soon { flex-wrap: wrap; gap: 16px; padding: 24px; }
+    .cs-body { flex-basis: 100%; order: 3; }
   }
 </style>
 </head>
@@ -451,8 +492,8 @@
       <div class="panel service-card reveal">
         <span class="corner tl"></span><span class="corner br"></span>
         <div class="service-icon">📞</div>
-        <h3>AI RECEPTIONIST</h3>
-        <p>A natural-sounding AI answers your phone 24/7 — even nights, weekends, and while you're with customers. It books appointments and answers common questions.</p>
+        <h3>AI RECEPTIONIST <span class="soon-tag">COMING SOON</span></h3>
+        <p>A natural-sounding AI that answers your phone 24/7 — even nights, weekends, and while you're with customers. It will book appointments and answer common questions. Launching soon.</p>
         <ul>
           <li>Answers every call, day or night</li>
           <li>Books appointments straight into your calendar</li>
@@ -500,49 +541,67 @@
       <h2 class="sec-title">Simple plans that pay for themselves.</h2>
       <p class="sec-sub">One new customer a month typically covers the cost. No contracts — cancel anytime.</p>
     </div>
+    <div class="panel coming-soon reveal">
+      <div class="cs-icon">📞</div>
+      <div class="cs-body">
+        <h3>AI RECEPTIONIST</h3>
+        <p>Never miss another call — 24/7 AI phone answering and appointment booking.</p>
+      </div>
+      <div class="cs-badge">COMING SOON</div>
+    </div>
     <div class="pricing-grid">
       <div class="panel price-card reveal">
         <span class="corner tl"></span><span class="corner br"></span>
-        <div class="plan-name">REVIEW ENGINE</div>
-        <div class="plan-for">For businesses that want to dominate local search</div>
-        <div class="price">$297<small>/mo</small></div>
-        <div class="price-note">Setup included</div>
+        <div class="plan-name">AI AUDIT</div>
+        <div class="plan-for">See exactly where AI can save your business time and money</div>
+        <div class="price">$150</div>
+        <div class="price-note">online · $250 in-person</div>
         <ul>
-          <li>Automated review requests</li>
-          <li>AI replies to every review</li>
-          <li>Unhappy-customer catch system</li>
-          <li>Monthly growth report</li>
+          <li>30–45 minute deep dive into your current workflows</li>
+          <li>Written report showing your biggest time/money opportunities</li>
+          <li>No obligation — fee credits toward any service if you sign up within 30 days</li>
         </ul>
-        <a href="#contact" class="btn btn-ghost">Start Getting Reviews</a>
+        <a href="#contact" class="btn btn-ghost">Book Your Audit</a>
       </div>
       <div class="panel price-card featured reveal">
         <div class="badge">MOST POPULAR</div>
-        <div class="plan-name">FRONT DESK PRO</div>
-        <div class="plan-for">AI Receptionist + Review Engine together</div>
-        <div class="price">$497<small>/mo</small></div>
-        <div class="price-note">Setup included · everything in Review Engine, plus:</div>
+        <div class="plan-name">AI REVIEW ENGINE</div>
+        <div class="plan-for">Turn every completed job into a 5-star Google review, automatically</div>
+        <div class="price">$197<small>/mo</small></div>
+        <div class="price-note">+ $297 one-time setup</div>
         <ul>
-          <li>24/7 AI phone answering</li>
-          <li>Appointment booking on autopilot</li>
-          <li>Missed-call instant text-back</li>
-          <li>Call logs &amp; lead tracking</li>
-          <li>Priority support</li>
+          <li>Automated review requests by text</li>
+          <li>Smart reminder sequence for non-responders</li>
+          <li>Missed-call and speed-to-lead follow-up included</li>
+          <li>Monthly growth report</li>
         </ul>
-        <a href="#contact" class="btn btn-primary">Book Your Free Call</a>
+        <a href="#contact" class="btn btn-primary">Start Getting Reviews</a>
       </div>
       <div class="panel price-card reveal">
         <span class="corner tl"></span><span class="corner br"></span>
-        <div class="plan-name">AI TEAM TRAINING</div>
-        <div class="plan-for">For teams ready to work smarter with AI</div>
-        <div class="price">$750<small>+</small></div>
-        <div class="price-note">One-time workshop · custom quotes for larger teams</div>
+        <div class="plan-name">AI TRAINING WORKSHOP</div>
+        <div class="plan-for">Teach your team to work faster with AI — writing, scheduling, customer replies, and more</div>
+        <div class="price">$500–750</div>
+        <div class="price-note">half-day online · $750–1,000 half-day in-person</div>
         <ul>
-          <li>On-site or virtual workshop</li>
-          <li>Custom AI playbook for your business</li>
-          <li>Tool setup for your team</li>
-          <li>30 days of follow-up support</li>
+          <li>Hands-on workshop built around your actual workflows</li>
+          <li>Ready-to-use AI playbook for your team</li>
+          <li>30 days of follow-up support included</li>
         </ul>
-        <a href="#contact" class="btn btn-ghost">Ask About Training</a>
+        <a href="#contact" class="btn btn-ghost">Book a Workshop</a>
+      </div>
+      <div class="panel price-card reveal">
+        <span class="corner tl"></span><span class="corner br"></span>
+        <div class="plan-name">WEBSITE BUILD</div>
+        <div class="plan-for">A clean, modern website that actually works for your business</div>
+        <div class="price">$600<small>+</small></div>
+        <div class="price-note">starting at · $75/mo maintenance</div>
+        <ul>
+          <li>Custom-built site, not a template</li>
+          <li>Mobile-friendly, fast-loading</li>
+          <li>Ongoing hosting, updates, and small edits included</li>
+        </ul>
+        <a href="#contact" class="btn btn-ghost">Get a Quote</a>
       </div>
     </div>
   </div>
@@ -556,16 +615,16 @@
     </div>
     <div class="faq-list reveal">
       <details>
-        <summary>Will the AI receptionist sound like a robot?</summary>
-        <p>No — modern voice AI sounds natural and conversational. We customize it with your business name, services, hours, and tone, and you approve how it sounds before it ever answers a real call.</p>
+        <summary>What happens during the AI Audit?</summary>
+        <p>We spend 30-45 minutes learning how your business runs today, then hand you a clear written report on where AI could save you real time and money — no jargon, no pressure, no obligation to buy anything.</p>
       </details>
       <details>
         <summary>Do I need to be "techy" for any of this?</summary>
-        <p>Not at all. We handle 100% of the setup and maintenance. You keep running your business — the only difference is your phone always gets answered and reviews start showing up.</p>
+        <p>Not at all. We handle 100% of the setup and maintenance. You keep running your business — the only difference is the busywork starts disappearing and the reviews start showing up.</p>
       </details>
       <details>
         <summary>How fast will I see results?</summary>
-        <p>The AI receptionist starts capturing missed calls on day one. Most businesses see new Google reviews within the first two weeks of turning on the review engine.</p>
+        <p>Most businesses see new Google reviews within the first two weeks of turning on the review engine. With training, teams usually start saving time the same week they learn the workflows.</p>
       </details>
       <details>
         <summary>Is asking customers for reviews allowed?</summary>
@@ -573,7 +632,7 @@
       </details>
       <details>
         <summary>What if I want to cancel?</summary>
-        <p>No long-term contracts. Plans are month-to-month and you can cancel anytime — though once the reviews and booked appointments start rolling in, most clients don't.</p>
+        <p>No long-term contracts. Monthly plans are month-to-month and you can cancel anytime — though once the reviews start rolling in, most clients don't.</p>
       </details>
     </div>
   </div>

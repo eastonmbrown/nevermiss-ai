@@ -333,7 +333,7 @@
 
   /* CTA */
   .cta-box {
-    padding: 70px 40px; text-align: center; border-radius: 16px;
+    padding: 56px 46px; border-radius: 16px;
     border: 1px solid var(--line-bright);
     background:
       radial-gradient(ellipse 60% 80% at 50% 0%, rgba(0,229,255,0.12), transparent 65%),
@@ -341,7 +341,55 @@
     backdrop-filter: blur(8px); position: relative; overflow: hidden;
   }
   .cta-box h2 { font-size: clamp(1.5rem, 3.4vw, 2.2rem); margin-bottom: 16px; }
-  .cta-box p { color: var(--muted); max-width: 540px; margin: 0 auto 34px; font-size: 1.02rem; }
+  .cta-box p { color: var(--muted); font-size: 1.02rem; margin-bottom: 26px; }
+
+  /* contact form */
+  .contact-grid { display: grid; grid-template-columns: 0.85fr 1.15fr; gap: 52px; align-items: start; }
+  .contact-direct { display: flex; flex-direction: column; gap: 12px; margin-top: 30px; }
+  .contact-direct a, .contact-direct span { color: var(--muted); font-size: 0.92rem; }
+  .contact-direct a:hover { color: var(--cyan); }
+
+  .contact-form .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .contact-form .field { margin-bottom: 16px; }
+  .contact-form label {
+    display: block; font-size: 0.8rem; font-weight: 600; color: var(--text);
+    margin-bottom: 7px; letter-spacing: 0.02em;
+  }
+  .contact-form .req { color: var(--cyan); }
+  .contact-form input, .contact-form select, .contact-form textarea {
+    width: 100%; padding: 12px 14px; border-radius: 8px;
+    background: rgba(3, 10, 20, 0.6); border: 1px solid var(--line);
+    color: var(--text); font-family: 'Inter', sans-serif; font-size: 0.94rem;
+    transition: border-color .18s, box-shadow .18s;
+  }
+  .contact-form input::placeholder, .contact-form textarea::placeholder { color: rgba(143,168,194,0.5); }
+  .contact-form input:focus, .contact-form select:focus, .contact-form textarea:focus {
+    outline: none; border-color: var(--line-bright); box-shadow: 0 0 0 3px rgba(0,229,255,0.08);
+  }
+  .contact-form input.invalid, .contact-form textarea.invalid { border-color: #ff6b81; }
+  .contact-form select { cursor: pointer; }
+  .contact-form select option { background: #071322; color: var(--text); }
+  .contact-form textarea { resize: vertical; min-height: 96px; }
+  .consent {
+    display: flex; gap: 11px; align-items: flex-start; margin: 4px 0 22px;
+    font-size: 0.8rem !important; font-weight: 400 !important; color: var(--muted) !important;
+    line-height: 1.55; cursor: pointer;
+  }
+  .consent input { width: auto !important; margin-top: 2px; flex-shrink: 0; accent-color: var(--cyan); }
+  .consent a { color: var(--cyan); }
+  .form-submit { width: 100%; }
+  .form-submit:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+  .form-status { font-size: 0.9rem; margin: 14px 0 0 !important; min-height: 1.2em; }
+  .form-status.ok { color: #5ee6a8; }
+  .form-status.err { color: #ff8fa0; }
+
+  @media (max-width: 880px) {
+    .contact-grid { grid-template-columns: 1fr; gap: 36px; }
+    .cta-box { padding: 40px 26px; }
+  }
+  @media (max-width: 560px) {
+    .contact-form .field-row { grid-template-columns: 1fr; gap: 0; }
+  }
 
   footer { border-top: 1px solid var(--line); padding: 54px 0 32px; }
   .footer-grid {
@@ -641,9 +689,61 @@
 <section id="contact">
   <div class="container">
     <div class="cta-box reveal">
-      <h2>Stop losing customers you never knew you had.</h2>
-      <p>Book a free 15-minute discovery call. We'll show you exactly where calls and reviews are slipping through the cracks — no pressure, no jargon.</p>
-      <a href="mailto:easton@voointegrations.com?subject=Discovery%20Call%20—%20Voo%20AI%20Integrations" class="btn btn-primary">Email Us to Get Started</a>
+      <div class="contact-grid">
+        <div class="contact-intro">
+          <h2>Let's find your easy wins.</h2>
+          <p>Tell us a bit about your business and we'll get back to you within one business day — usually much sooner. No pressure, no jargon, no obligation.</p>
+          <div class="contact-direct">
+            <a href="mailto:easton@voointegrations.com">✉&nbsp;&nbsp;easton@voointegrations.com</a>
+            <a href="tel:+14352925086">✆&nbsp;&nbsp;+1 (435) 292-5086</a>
+            <span>◉&nbsp;&nbsp;Heber City, Utah</span>
+          </div>
+        </div>
+
+        <form class="contact-form" id="contactForm" novalidate>
+          <div class="field-row">
+            <div class="field">
+              <label for="cf-name">Your name <span class="req">*</span></label>
+              <input type="text" id="cf-name" name="name" required autocomplete="name" placeholder="Jane Smith">
+            </div>
+            <div class="field">
+              <label for="cf-business">Business name</label>
+              <input type="text" id="cf-business" name="business" autocomplete="organization" placeholder="Smith Plumbing">
+            </div>
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label for="cf-email">Email <span class="req">*</span></label>
+              <input type="email" id="cf-email" name="email" required autocomplete="email" placeholder="jane@smithplumbing.com">
+            </div>
+            <div class="field">
+              <label for="cf-phone">Phone</label>
+              <input type="tel" id="cf-phone" name="phone" autocomplete="tel" placeholder="(435) 555-0123">
+            </div>
+          </div>
+          <div class="field">
+            <label for="cf-service">What are you interested in?</label>
+            <select id="cf-service" name="service">
+              <option value="Not sure yet — help me figure it out">Not sure yet — help me figure it out</option>
+              <option value="AI Audit">AI Audit</option>
+              <option value="AI Review Engine">AI Review Engine</option>
+              <option value="AI Training Workshop">AI Training Workshop</option>
+              <option value="Website Build">Website Build</option>
+              <option value="AI Receptionist (when available)">AI Receptionist (when available)</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="cf-message">Anything you'd like us to know?</label>
+            <textarea id="cf-message" name="message" rows="4" placeholder="Tell us what's eating up your time right now…"></textarea>
+          </div>
+          <label class="consent">
+            <input type="checkbox" id="cf-consent" name="smsConsent" value="yes">
+            <span>I agree to receive text messages from Voo AI Integrations about my inquiry. Message and data rates may apply, message frequency varies, and I can reply STOP to opt out at any time. See our <a href="privacy.html">Privacy Policy</a>.</span>
+          </label>
+          <button type="submit" class="btn btn-primary form-submit" id="cf-submit">Send My Request</button>
+          <p class="form-status" id="cf-status" role="status" aria-live="polite"></p>
+        </form>
+      </div>
     </div>
   </div>
 </section>
@@ -744,6 +844,80 @@
 
   document.querySelectorAll('#navLinks a').forEach(a =>
     a.addEventListener('click', () => document.getElementById('navLinks').classList.remove('open')));
+
+  /* ---------------------------------------------------------------
+     CONTACT FORM
+     To send submissions to an inbox/CRM, set FORM_ENDPOINT below to
+     your Formspree URL (https://formspree.io/f/xxxxxxx) or any other
+     endpoint that accepts a JSON POST.
+     While it is empty, the form falls back to opening a pre-filled
+     email so no enquiry is ever lost.
+  ----------------------------------------------------------------*/
+  const FORM_ENDPOINT = '';
+  const CONTACT_EMAIL = 'easton@voointegrations.com';
+
+  const form = document.getElementById('contactForm');
+  const statusEl = document.getElementById('cf-status');
+  const submitBtn = document.getElementById('cf-submit');
+
+  function setStatus(msg, kind) {
+    statusEl.textContent = msg;
+    statusEl.className = 'form-status' + (kind ? ' ' + kind : '');
+  }
+
+  function validate() {
+    let ok = true;
+    [['cf-name', v => v.trim().length > 0],
+     ['cf-email', v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim())]].forEach(([id, test]) => {
+      const el = document.getElementById(id);
+      const good = test(el.value);
+      el.classList.toggle('invalid', !good);
+      if (!good && ok) { el.focus(); ok = false; }
+    });
+    return ok;
+  }
+
+  form.addEventListener('submit', async e => {
+    e.preventDefault();
+    if (!validate()) { setStatus('Please add your name and a valid email address.', 'err'); return; }
+
+    const data = {
+      name: form.name.value.trim(),
+      business: form.business.value.trim(),
+      email: form.email.value.trim(),
+      phone: form.phone.value.trim(),
+      service: form.service.value,
+      message: form.message.value.trim(),
+      smsConsent: document.getElementById('cf-consent').checked ? 'Yes' : 'No'
+    };
+
+    if (!FORM_ENDPOINT) {
+      const body = `Name: ${data.name}\nBusiness: ${data.business}\nEmail: ${data.email}\nPhone: ${data.phone}\nInterested in: ${data.service}\nText message consent: ${data.smsConsent}\n\n${data.message}`;
+      window.location.href = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent('Website enquiry — ' + (data.business || data.name))}&body=${encodeURIComponent(body)}`;
+      setStatus('Opening your email app to send this — just hit send.', 'ok');
+      return;
+    }
+
+    submitBtn.disabled = true;
+    setStatus('Sending…');
+    try {
+      const res = await fetch(FORM_ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify(data)
+      });
+      if (!res.ok) throw new Error('Request failed');
+      form.reset();
+      setStatus('Thanks! We got it and will be in touch within one business day.', 'ok');
+    } catch (err) {
+      setStatus(`Something went wrong. Please email us directly at ${CONTACT_EMAIL}.`, 'err');
+    } finally {
+      submitBtn.disabled = false;
+    }
+  });
+
+  form.querySelectorAll('input, textarea').forEach(el =>
+    el.addEventListener('input', () => el.classList.remove('invalid')));
 </script>
 
 <!-- GoHighLevel chat widget -->

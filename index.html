@@ -370,14 +370,7 @@
   .contact-form select { cursor: pointer; }
   .contact-form select option { background: #071322; color: var(--text); }
   .contact-form textarea { resize: vertical; min-height: 96px; }
-  .consent {
-    display: flex; gap: 11px; align-items: flex-start; margin: 4px 0 22px;
-    font-size: 0.8rem !important; font-weight: 400 !important; color: var(--muted) !important;
-    line-height: 1.55; cursor: pointer;
-  }
-  .consent input { width: auto !important; margin-top: 2px; flex-shrink: 0; accent-color: var(--cyan); }
-  .consent a { color: var(--cyan); }
-  .form-submit { width: 100%; }
+  .form-submit { width: 100%; margin-top: 6px; }
   .form-submit:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
   .form-status { font-size: 0.9rem; margin: 14px 0 0 !important; min-height: 1.2em; }
   .form-status.ok { color: #5ee6a8; }
@@ -717,29 +710,21 @@
               <input type="email" id="cf-email" name="email" required autocomplete="email" placeholder="jane@smithplumbing.com">
             </div>
             <div class="field">
-              <label for="cf-phone">Phone</label>
-              <input type="tel" id="cf-phone" name="phone" autocomplete="tel" placeholder="(435) 555-0123">
+              <label for="cf-service">What are you interested in?</label>
+              <select id="cf-service" name="service">
+                <option value="Not sure yet — help me figure it out">Not sure yet — help me figure it out</option>
+                <option value="AI Audit">AI Audit</option>
+                <option value="AI Review Engine">AI Review Engine</option>
+                <option value="AI Training Workshop">AI Training Workshop</option>
+                <option value="Website Build">Website Build</option>
+                <option value="AI Receptionist (when available)">AI Receptionist (when available)</option>
+              </select>
             </div>
-          </div>
-          <div class="field">
-            <label for="cf-service">What are you interested in?</label>
-            <select id="cf-service" name="service">
-              <option value="Not sure yet — help me figure it out">Not sure yet — help me figure it out</option>
-              <option value="AI Audit">AI Audit</option>
-              <option value="AI Review Engine">AI Review Engine</option>
-              <option value="AI Training Workshop">AI Training Workshop</option>
-              <option value="Website Build">Website Build</option>
-              <option value="AI Receptionist (when available)">AI Receptionist (when available)</option>
-            </select>
           </div>
           <div class="field">
             <label for="cf-message">Anything you'd like us to know?</label>
             <textarea id="cf-message" name="message" rows="4" placeholder="Tell us what's eating up your time right now…"></textarea>
           </div>
-          <label class="consent">
-            <input type="checkbox" id="cf-consent" name="smsConsent" value="yes">
-            <span>I agree to receive text messages from Voo AI Integrations about my inquiry. Message and data rates may apply, message frequency varies, and I can reply STOP to opt out at any time. See our <a href="privacy.html">Privacy Policy</a>.</span>
-          </label>
           <button type="submit" class="btn btn-primary form-submit" id="cf-submit">Send My Request</button>
           <p class="form-status" id="cf-status" role="status" aria-live="polite"></p>
         </form>
@@ -885,14 +870,12 @@
       name: form.name.value.trim(),
       business: form.business.value.trim(),
       email: form.email.value.trim(),
-      phone: form.phone.value.trim(),
       service: form.service.value,
-      message: form.message.value.trim(),
-      smsConsent: document.getElementById('cf-consent').checked ? 'Yes' : 'No'
+      message: form.message.value.trim()
     };
 
     if (!FORM_ENDPOINT) {
-      const body = `Name: ${data.name}\nBusiness: ${data.business}\nEmail: ${data.email}\nPhone: ${data.phone}\nInterested in: ${data.service}\nText message consent: ${data.smsConsent}\n\n${data.message}`;
+      const body = `Name: ${data.name}\nBusiness: ${data.business}\nEmail: ${data.email}\nInterested in: ${data.service}\n\n${data.message}`;
       window.location.href = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent('Website enquiry — ' + (data.business || data.name))}&body=${encodeURIComponent(body)}`;
       setStatus('Opening your email app to send this — just hit send.', 'ok');
       return;

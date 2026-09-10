@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /_dev/
+
+Sitemap: https://voointegrations.com/sitemap.xml

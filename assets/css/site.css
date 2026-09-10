@@ -198,9 +198,9 @@ section { padding: var(--section) 0; position: relative; }
 .card p { color: var(--muted); }
 
 /* ---------- Hero ---------- */
-.hero { padding: 150px 0 60px; position: relative; }
+.hero { padding: 150px 0 60px; position: relative; isolation: isolate; }
 main { overflow-x: clip; }
-.hero-grid { display: grid; grid-template-columns: 1.05fr .95fr; gap: 56px; align-items: center; }
+.hero-grid { display: grid; grid-template-columns: 1.05fr .95fr; gap: 56px; align-items: center; position: relative; z-index: 1; }
 .pill {
   display: inline-flex; align-items: center; gap: 10px; padding: 7px 14px 7px 8px;
   border-radius: var(--radius-pill); border: 1px solid var(--line-strong); background: rgba(255,255,255,.04);
@@ -210,7 +210,8 @@ main { overflow-x: clip; }
 .pill b { color: var(--text); font-weight: 600; }
 @keyframes pulse { 0%,100% { box-shadow: 0 0 0 4px rgba(52,211,153,.18); } 50% { box-shadow: 0 0 0 7px rgba(52,211,153,.06); } }
 .hero h1 { font-size: clamp(2.5rem, 5.4vw, 4.2rem); letter-spacing: -0.035em; font-weight: 700; }
-.hero h1 .grad { background: var(--gradient); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.hero h1 .grad { background: linear-gradient(110deg, #5b8cff, #8b5cf6 30%, #22d3ee 50%, #8b5cf6 70%, #5b8cff); background-size: 250% auto; -webkit-background-clip: text; background-clip: text; color: transparent; animation: shimmer 7s linear infinite; }
+@keyframes shimmer { to { background-position: -250% center; } }
 .hero .lede { color: var(--muted); font-size: clamp(1.05rem, 1.5vw, 1.2rem); margin-top: 22px; max-width: 54ch; }
 .hero-ctas { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
 .hero-meta { display: flex; flex-wrap: wrap; gap: 8px 22px; margin-top: 26px; color: var(--faint); font-size: .86rem; }
@@ -232,10 +233,10 @@ main { overflow-x: clip; }
   box-shadow: 0 1px 0 rgba(255,255,255,.08) inset, 0 40px 90px -30px rgba(0,0,0,.8), var(--glow);
   padding: 18px;
   backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-  transform: perspective(1400px) rotateY(-6deg) rotateX(3deg);
+  transform: perspective(1400px) rotateY(var(--ry, -6deg)) rotateX(var(--rx, 3deg));
   transition: transform .6s ease;
 }
-.preview:hover { transform: perspective(1400px) rotateY(-2deg) rotateX(1deg); }
+.preview.tilting { transition: transform .12s ease-out; }
 .preview-bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
 .preview-bar .dots { display: flex; gap: 6px; }
 .preview-bar .dots i { width: 9px; height: 9px; border-radius: 50%; background: rgba(255,255,255,.14); }
@@ -471,8 +472,7 @@ main { overflow-x: clip; }
 @media (max-width: 900px) {
   .hero { padding-top: 120px; }
   .hero-grid { grid-template-columns: 1fr; gap: 44px; }
-  .preview { transform: none; }
-  .preview:hover { transform: none; }
+  .preview { transform: none !important; }
   .chip-2 { left: 8px; }
   .problems { grid-template-columns: 1fr; }
   .pricing-layout, .founder, .contact-grid { grid-template-columns: 1fr; }
@@ -501,7 +501,83 @@ main { overflow-x: clip; }
 /* ---------- Motion hygiene ---------- */
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; }
+  *, *::before, *::after { animation-duration: .001ms !important; animation-delay: 0s !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; }
   .js .reveal { opacity: 1; transform: none; }
   .preview { transform: none; }
+}
+
+/* ============================================================
+   Motion graphics (all disabled under prefers-reduced-motion)
+   ============================================================ */
+
+/* Hero constellation canvas + perspective grid floor */
+.hero-fx { position: absolute; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+.hero-fx canvas { position: absolute; inset: 0; width: 100%; height: 100%; opacity: .9; }
+.grid-floor {
+  position: absolute; left: -25%; right: -25%; bottom: -6%; height: 42%; pointer-events: none;
+  background-image:
+    linear-gradient(rgba(91,140,255,.28) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(91,140,255,.28) 1px, transparent 1px);
+  background-size: 64px 64px;
+  transform: perspective(700px) rotateX(66deg);
+  transform-origin: 50% 0;
+  animation: floor 5s linear infinite;
+  mask-image: linear-gradient(to bottom, transparent, #000 30%, #000 65%, transparent 100%), linear-gradient(90deg, transparent, #000 25%, #000 75%, transparent);
+  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 30%, #000 65%, transparent 100%), linear-gradient(90deg, transparent, #000 25%, #000 75%, transparent);
+  mask-composite: intersect; -webkit-mask-composite: source-in;
+  opacity: .7;
+}
+@keyframes floor { to { background-position: 0 64px, 0 0; } }
+.hero-fx .glow-line {
+  position: absolute; left: 0; right: 0; top: 46%; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(34,211,238,.6), transparent);
+  animation: scan 9s ease-in-out infinite; opacity: .5;
+}
+@keyframes scan { 0%, 100% { transform: translateY(-140px); opacity: 0; } 15%, 85% { opacity: .6; } 50% { transform: translateY(160px); } }
+
+/* Traveling light beam around featured cards */
+@property --beam { syntax: '<angle>'; inherits: false; initial-value: 0deg; }
+.beam {
+  position: absolute; inset: 0; border-radius: inherit; pointer-events: none; padding: 1.5px;
+  background: conic-gradient(from var(--beam), transparent 0 62%, rgba(91,140,255,.0) 70%, #5b8cff 82%, #22d3ee 90%, transparent 96%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor; mask-composite: exclude;
+  animation: beam 6s linear infinite;
+}
+.beam.slow { animation-duration: 9s; animation-delay: -3s; }
+@keyframes beam { to { --beam: 360deg; } }
+
+/* Tools marquee */
+.tools { padding: 30px 0 6px; overflow: hidden; }
+.tools-inner { flex-direction: column; gap: 16px; }
+.marquee { width: 100%; overflow: hidden; mask-image: linear-gradient(90deg, transparent, #000 15%, #000 85%, transparent); -webkit-mask-image: linear-gradient(90deg, transparent, #000 15%, #000 85%, transparent); }
+.marquee-track { display: flex; width: max-content; animation: marquee 32s linear infinite; }
+.marquee:hover .marquee-track { animation-play-state: paused; }
+.marquee-group { display: flex; align-items: center; gap: 52px; padding-right: 52px; }
+.marquee-group .tool { white-space: nowrap; }
+@keyframes marquee { to { transform: translateX(-50%); } }
+
+/* Step connector pulse */
+.process::before {
+  content: ""; position: absolute; left: 6%; right: 6%; top: 52px; height: 1px; z-index: -1;
+  background: linear-gradient(90deg, transparent, rgba(91,140,255,.35) 20%, rgba(34,211,238,.35) 80%, transparent);
+}
+.process { isolation: isolate; }
+.step .n { position: relative; }
+.step .n::after {
+  content: ""; position: absolute; left: -6px; top: 50%; width: 8px; height: 8px; margin-top: -4px; border-radius: 50%;
+  background: var(--brand-3); box-shadow: 0 0 0 0 rgba(34,211,238,.5); animation: ping 2.8s ease-out infinite; opacity: 0;
+}
+.step:nth-child(1) .n::after { animation-delay: 0s; } .step:nth-child(2) .n::after { animation-delay: .7s; }
+.step:nth-child(3) .n::after { animation-delay: 1.4s; } .step:nth-child(4) .n::after { animation-delay: 2.1s; }
+@keyframes ping { 0% { opacity: 0; box-shadow: 0 0 0 0 rgba(34,211,238,.5); } 10% { opacity: 1; } 60% { opacity: 0; box-shadow: 0 0 0 14px rgba(34,211,238,0); } 100% { opacity: 0; } }
+@media (max-width: 1040px) { .process::before { display: none; } .step .n::after { display: none; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-fx canvas, .grid-floor, .hero-fx .glow-line, .beam, .step .n::after { display: none; }
+  .hero h1 .grad { animation: none; background: var(--gradient); -webkit-background-clip: text; background-clip: text; }
+  .marquee { mask-image: none; -webkit-mask-image: none; }
+  .marquee-track { animation: none; width: auto; justify-content: center; }
+  .marquee-group { flex-wrap: wrap; justify-content: center; padding-right: 0; gap: 14px 30px; }
+  .marquee-group + .marquee-group { display: none; }
 }

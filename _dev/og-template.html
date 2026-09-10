@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>OG image template (not published)</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; box-sizing: border-box; }
+  body { width: 1200px; height: 630px; background: #06080f; color: #eef1f7; font-family: "Inter", system-ui, sans-serif; overflow: hidden; position: relative; }
+  .grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(255,255,255,.04) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.04) 1px, transparent 1px); background-size: 64px 64px; -webkit-mask-image: radial-gradient(ellipse 70% 70% at 30% 30%, #000 20%, transparent 75%); }
+  .a1 { position: absolute; width: 700px; height: 520px; left: -140px; top: -160px; border-radius: 50%; background: radial-gradient(circle, rgba(91,140,255,.45), transparent 65%); filter: blur(80px); }
+  .a2 { position: absolute; width: 640px; height: 640px; right: -200px; bottom: -260px; border-radius: 50%; background: radial-gradient(circle, rgba(139,92,246,.45), transparent 65%); filter: blur(80px); }
+  .a3 { position: absolute; width: 420px; height: 420px; right: 180px; top: -120px; border-radius: 50%; background: radial-gradient(circle, rgba(34,211,238,.28), transparent 65%); filter: blur(70px); }
+  .wrap { position: relative; padding: 76px 84px; height: 100%; display: flex; flex-direction: column; justify-content: space-between; }
+  .brand { display: flex; align-items: center; gap: 18px; font-family: "Space Grotesk", sans-serif; font-weight: 700; font-size: 30px; }
+  .brand .dim { color: #a6b0c4; font-weight: 500; }
+  h1 { font-family: "Space Grotesk", sans-serif; font-size: 78px; line-height: 1.05; letter-spacing: -0.035em; font-weight: 700; max-width: 980px; }
+  h1 span { background: linear-gradient(135deg, #5b8cff, #8b5cf6 55%, #22d3ee); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .sub { font-size: 28px; color: #a6b0c4; margin-top: 24px; max-width: 900px; line-height: 1.4; }
+  .foot { display: flex; gap: 28px; font-family: "JetBrains Mono", monospace; font-size: 18px; letter-spacing: .08em; text-transform: uppercase; color: #6f7890; }
+  .foot b { color: #22d3ee; font-weight: 500; }
+</style>
+</head>
+<body>
+<div class="grid"></div><div class="a1"></div><div class="a2"></div><div class="a3"></div>
+<div class="wrap">
+  <div class="brand">
+    <svg width="56" height="56" viewBox="0 0 64 64"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5b8cff"/><stop offset=".55" stop-color="#8b5cf6"/><stop offset="1" stop-color="#22d3ee"/></linearGradient></defs><rect width="64" height="64" rx="16" fill="#0e1322"/><rect x="1.5" y="1.5" width="61" height="61" rx="15" fill="none" stroke="url(#g)" stroke-width="2"/><path d="M18 20 32 46 46 20" fill="none" stroke="url(#g)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/><circle cx="32" cy="46" r="5" fill="#22d3ee"/></svg>
+    <span>Voo <span class="dim">AI Integrations</span></span>
+  </div>
+  <div>
+    <h1>Put AI to work in your business. <span>We handle the setup.</span></h1>
+    <p class="sub">$150 AI Audit · Team training · Automated Google reviews · Websites</p>
+  </div>
+  <div class="foot"><span><b>voointegrations.com</b></span><span>Heber City, Utah</span><span>Fixed prices · No contracts</span></div>
+</div>
+</body>
+</html>

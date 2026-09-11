@@ -263,6 +263,134 @@
     counters.forEach(function (el) { el.textContent = (0).toFixed(parseInt(el.getAttribute('data-decimals') || '0', 10)); countIO.observe(el); });
   }
 
+
+  /* ---------- Hero torus nucleus (canvas point cloud, chrome + cyan/amber rim light) ---------- */
+  var torus = document.getElementById('torus');
+  var scene = document.getElementById('scene');
+  if (torus && scene && torus.getContext && !reduceMotion) {
+    var tc = torus.getContext('2d');
+    var TW = 0, TH = 0, tdpr = Math.min(window.devicePixelRatio || 1, 2), grid = [], trun = false, traf = null, t0 = null;
+    var tmx = 0, tmy = 0, smx = 0, smy = 0; // mouse influence, smoothed
+    function tResize() {
+      var r = torus.getBoundingClientRect();
+      TW = r.width; TH = r.height;
+      torus.width = Math.round(TW * tdpr); torus.height = Math.round(TH * tdpr);
+      tc.setTransform(tdpr, 0, 0, tdpr, 0, 0);
+      var nU = TW < 520 ? 72 : 112, nV = TW < 520 ? 24 : 36;
+      grid = []; buckets = [];
+      for (var i = 0; i < nU; i++) for (var j = 0; j < nV; j++) {
+        var u = i / nU * Math.PI * 2, v = j / nV * Math.PI * 2;
+        grid.push({ cu: Math.cos(u), su: Math.sin(u), cv: Math.cos(v), sv: Math.sin(v) });
+      }
+    }
+    function norm(x, y, z) { var l = Math.sqrt(x * x + y * y + z * z) || 1; return [x / l, y / l, z / l]; }
+    var L1 = norm(-0.55, -0.75, 0.45); // cyan key light, upper left
+    var L2 = norm(0.8, 0.55, 0.2);     // faint amber rim, lower right
+    // Colors are quantized into a small palette so each frame is a few dozen batched fills, not thousands.
+    var palette = {}, buckets = [];
+    function colorFor(key, d1, d2, spec, depth) {
+      var c = palette[key];
+      if (!c) {
+        var cr = 34 + d1 * 40 + d2 * 200 + spec * 220;
+        var cg = 46 + d1 * 190 + d2 * 130 + spec * 230;
+        var cb = 70 + d1 * 220 + d2 * 40 + spec * 255;
+        c = palette[key] = 'rgba(' + (cr | 0) + ',' + (cg | 0) + ',' + (cb | 0) + ',' + (0.14 + depth * 0.8).toFixed(2) + ')';
+      }
+      return c;
+    }
+    function tFrame(now) {
+      if (!trun) { traf = null; return; }
+      if (t0 === null) t0 = now;
+      var t = (now - t0) / 1000;
+      smx += (tmx - smx) * 0.04; smy += (tmy - smy) * 0.04;
+      tc.clearRect(0, 0, TW, TH);
+      var R = Math.min(TW, TH) * 0.27, rr = R * 0.42;
+      var ax = 1.1 + Math.sin(t * 0.21) * 0.12 + smy * 0.35;
+      var ay = t * 0.32 + smx * 0.6;
+      var az = Math.sin(t * 0.14) * 0.16;
+      var cax = Math.cos(ax), sax = Math.sin(ax), cay = Math.cos(ay), say = Math.sin(ay), caz = Math.cos(az), saz = Math.sin(az);
+      var cx = TW / 2, cy = TH / 2, f = R * 6, invRange = 1 / (R + rr);
+      var n = grid.length, k, b;
+      for (b = 0; b < buckets.length; b++) if (buckets[b]) buckets[b].n = 0;
+      for (k = 0; k < n; k++) {
+        var g = grid[k];
+        var x = (R + rr * g.cv) * g.cu, y = (R + rr * g.cv) * g.su, z = rr * g.sv;
+        var nx = g.cv * g.cu, ny = g.cv * g.su, nz = g.sv;
+        var y1 = y * cax - z * sax, z1 = y * sax + z * cax; y = y1; z = z1;
+        var ny1 = ny * cax - nz * sax, nz1 = ny * sax + nz * cax; ny = ny1; nz = nz1;
+        var x2 = x * cay + z * say, z2 = -x * say + z * cay; x = x2; z = z2;
+        var nx2 = nx * cay + nz * say, nz2 = -nx * say + nz * cay; nx = nx2; nz = nz2;
+        var x3 = x * caz - y * saz, y3 = x * saz + y * caz; x = x3; y = y3;
+        var nx3 = nx * caz - ny * saz, ny3 = nx * saz + ny * caz; nx = nx3; ny = ny3;
+        var sc = f / (f - z);
+        var d1 = Math.max(0, nx * L1[0] + ny * L1[1] + nz * L1[2]);
+        var d2 = Math.max(0, nx * L2[0] + ny * L2[1] + nz * L2[2]);
+        var spec = Math.pow(Math.max(0, nz), 18);
+        var depth = (z * invRange + 1) / 2;
+        // quantize: 8 key-light levels, 4 rim levels, 4 specular levels, 5 depth levels
+        var q1 = (d1 * 7 + .5) | 0, q2 = (d2 * 3 + .5) | 0, q3 = (spec * 3 + .5) | 0, q4 = (depth * 4 + .5) | 0;
+        var key = ((q1 * 4 + q2) * 4 + q3) * 5 + q4;
+        var bk = buckets[key] || (buckets[key] = { n: 0, xs: new Float32Array(n), ys: new Float32Array(n), ss: new Float32Array(n), c: colorFor(key, q1 / 7, q2 / 3, q3 / 3, q4 / 4) });
+        var i2 = bk.n++;
+        bk.xs[i2] = cx + x * sc; bk.ys[i2] = cy + y * sc; bk.ss[i2] = (1.4 + depth * 1.5) * sc;
+      }
+      for (b = 0; b < buckets.length; b++) {
+        var bb = buckets[b];
+        if (!bb || !bb.n) continue;
+        tc.fillStyle = bb.c;
+        tc.beginPath();
+        for (k = 0; k < bb.n; k++) { var s2 = bb.ss[k]; tc.rect(bb.xs[k] - s2 / 2, bb.ys[k] - s2 / 2, s2, s2); }
+        tc.fill();
+      }
+      traf = requestAnimationFrame(tFrame);
+    }
+    tResize();
+    var tResizeTimer;
+    window.addEventListener('resize', function () { clearTimeout(tResizeTimer); tResizeTimer = setTimeout(function () { tResize(); drawFilaments(); }, 150); });
+    var heroSection = scene.closest('.hero');
+    heroSection.addEventListener('pointermove', function (e) {
+      var r = heroSection.getBoundingClientRect();
+      tmx = (e.clientX - r.left) / r.width - .5; tmy = (e.clientY - r.top) / r.height - .5;
+    }, { passive: true });
+    heroSection.addEventListener('pointerleave', function () { tmx = 0; tmy = 0; });
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(function (entries) {
+        trun = entries[0].isIntersecting && !document.hidden;
+        if (trun && traf === null) traf = requestAnimationFrame(tFrame);
+      }, { threshold: 0 }).observe(scene);
+    } else { trun = true; traf = requestAnimationFrame(tFrame); }
+    document.addEventListener('visibilitychange', function () {
+      trun = !document.hidden;
+      if (trun && traf === null) traf = requestAnimationFrame(tFrame);
+    });
+  }
+
+  /* ---------- Data filaments: torus core -> holographic cards ---------- */
+  var filaments = document.getElementById('filaments');
+  function drawFilaments() {
+    if (!filaments || !scene) return;
+    var r = scene.getBoundingClientRect();
+    if (!r.width) return;
+    filaments.setAttribute('viewBox', '0 0 ' + r.width + ' ' + r.height);
+    var cx = r.width / 2, cy = r.height / 2, R = Math.min(r.width, r.height) * 0.27;
+    var out = '';
+    scene.querySelectorAll('.holo').forEach(function (h, i) {
+      if (getComputedStyle(h).display === 'none') return;
+      var b = h.getBoundingClientRect();
+      var x = b.left - r.left + b.width / 2, y = b.top - r.top + b.height / 2;
+      var dx = x - cx, dy = y - cy, len = Math.sqrt(dx * dx + dy * dy) || 1;
+      var sx = cx + dx / len * R * 0.62, sy = cy + dy / len * R * 0.62;
+      var qx = (sx + x) / 2 - dy * 0.18, qy = (sy + y) / 2 + dx * 0.18;
+      out += '<path class="' + (i === 0 ? 'amber' : '') + '" d="M' + sx.toFixed(1) + ' ' + sy.toFixed(1) + ' Q' + qx.toFixed(1) + ' ' + qy.toFixed(1) + ' ' + x.toFixed(1) + ' ' + y.toFixed(1) + '"/>';
+    });
+    filaments.innerHTML = out;
+  }
+  if (filaments && scene) {
+    // cards finish snapping into place ~2.3s after load; draw once they have settled
+    setTimeout(drawFilaments, reduceMotion ? 50 : 2400);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { setTimeout(drawFilaments, reduceMotion ? 60 : 2500); });
+  }
+
   /* ---------- Footer year ---------- */
   document.querySelectorAll('[data-year]').forEach(function (el) { el.textContent = new Date().getFullYear(); });
 })();
